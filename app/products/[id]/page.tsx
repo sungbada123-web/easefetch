@@ -73,7 +73,17 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                                         {product.id.substring(0, 2).toUpperCase()}
                                     </span>
                                 </div>
-                                {/* Placeholder for actual product image */}
+                                {/* Actual Product Image */}
+                                <div className="absolute inset-0 flex items-center justify-center p-8">
+                                    <Image 
+                                        src={product.image} 
+                                        alt={product.name} 
+                                        width={600} 
+                                        height={600}
+                                        className="object-contain w-full h-full drop-shadow-xl"
+                                        priority
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
