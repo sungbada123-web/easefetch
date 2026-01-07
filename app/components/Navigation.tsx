@@ -15,12 +15,12 @@ export default function Navigation() {
 
     // Group products by series for Mega Menu
     const seriesGroups = {
-        'Urban Logistics': products.filter(p => p.seriesId === 'logistics'),
-        'Cold Chain': products.filter(p => p.seriesId === 'cold-chain'),
-        'Lifestyle': products.filter(p => p.seriesId === 'lifestyle'),
-        'Enterprise': products.filter(p => p.seriesId === 'asset'),
-        'Specialty': products.filter(p => p.seriesId === 'specialty'),
-        'Retail': products.filter(p => p.seriesId === 'retail'),
+        'Urban Logistics': products.filter(p => p.series === 'logistics'),
+        'Cold Chain': products.filter(p => p.series === 'cold-chain'),
+        'Lifestyle': products.filter(p => p.series === 'lifestyle'),
+        'Enterprise': products.filter(p => p.series === 'enterprise'),
+        'Specialty': products.filter(p => p.series === 'specialty'),
+        'Retail': products.filter(p => p.series === 'retail'),
     };
 
     useEffect(() => {

@@ -14,13 +14,13 @@ export default function ProductMatrix() {
         { id: 'all', label: 'All Systems' },
         { id: 'logistics', label: 'Logistics' },
         { id: 'cold-chain', label: 'Cold Chain' },
-        { id: 'asset', label: 'Enterprise' },
+        { id: 'enterprise', label: 'Enterprise' },
         { id: 'software', label: 'Software' }
     ];
 
     const filteredProducts = filter === 'all'
         ? products
-        : products.filter(p => p.seriesId === filter || p.type === filter);
+        : products.filter(p => p.series === filter);
 
     return (
         <section className="py-32 bg-[#F8FAFB]">
