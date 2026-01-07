@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, ChevronDown, Globe } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { products } from '../data/products';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Navigation() {
     const [isOpen, setIsOpen] = useState(false);
@@ -98,6 +99,8 @@ export default function Navigation() {
                         </Link>
 
                         <div className="h-6 w-[1px] bg-[#E2E8F0]"></div>
+
+                        <LanguageSwitcher />
 
                         <Link href="/contact" className="bg-[#2C3E50] text-white px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] hover:bg-[#E67E22] transition-colors">
                             Get Quote
