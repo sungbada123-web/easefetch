@@ -3,6 +3,7 @@ import { Inter } from "next/font/google"; // Using Inter for that clean industri
 import "./globals.css";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
+import FloatingContact from "./components/FloatingContact";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
         <Navigation />
         {children}
         <Footer />
+        <FloatingContact />
       </body>
     </html>
   );

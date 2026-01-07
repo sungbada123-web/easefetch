@@ -40,8 +40,8 @@ export default function ProductMatrix() {
                                 key={cat.id}
                                 onClick={() => setFilter(cat.id)}
                                 className={`px-6 py-3 text-xs font-bold uppercase tracking-[0.15em] transition-all border ${filter === cat.id
-                                        ? 'bg-[#2C3E50] text-white border-[#2C3E50]'
-                                        : 'bg-white text-[#95A5A6] border-transparent hover:border-[#CBD5E0]'
+                                    ? 'bg-[#2C3E50] text-white border-[#2C3E50]'
+                                    : 'bg-white text-[#95A5A6] border-transparent hover:border-[#CBD5E0]'
                                     }`}
                             >
                                 {cat.label}
@@ -71,15 +71,15 @@ export default function ProductMatrix() {
                                     )}
 
                                     {/* Image Area */}
-                                    <div className="relative h-[300px] w-full bg-[#f1f3f5] overflow-hidden">
-                                        <div className="absolute inset-0 bg-blue-50/30">
-                                            {/* Placeholder for image, utilizing CSS gradient if image fails load or for style */}
-                                            <div className={`w-full h-full opacity-10`} style={{ background: `radial-gradient(circle at center, ${product.color}, transparent)` }}></div>
-                                        </div>
-                                        {/* Ideally we use Next Image, here using a styled div for preview structure if image missing */}
-                                        <div className="absolute inset-0 flex items-center justify-center text-[#CBD5E0] font-bold text-6xl uppercase tracking-tighter opacity-20">
-                                            {product.id.split('-')[0]}
-                                        </div>
+                                    <div className="relative h-[300px] w-full bg-[#f1f3f5] overflow-hidden flex items-center justify-center p-8">
+                                        <div className="absolute inset-0 bg-white/50"></div>
+                                        <Image
+                                            src={product.image}
+                                            alt={product.name}
+                                            width={400}
+                                            height={400}
+                                            className="w-full h-full object-contain relative z-10 drop-shadow-xl hover:scale-105 transition-transform duration-500"
+                                        />
                                     </div>
 
                                     {/* Content */}
