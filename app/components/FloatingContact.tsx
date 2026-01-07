@@ -46,10 +46,36 @@ export default function FloatingContact() {
                 // 如果是 API Key 没配置，给用户一个友好的提示（开发者模式下）
                 setMessages(prev => [...prev, {
                     role: 'assistant',
-                    content: '抱歉，系统检测到 AI 密钥尚未配置。请联系管理员在环境变量中设置 NEXT_PUBLIC_GEMINI_API_KEY。'
+                    content: '抱歉，系统暂时无法连接，请稍后再试。'
                 }]);
             } else {
                 setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
+
+                // 检测用户消息中是否包含联系方式（手机号、邮箱等）
+                const phoneRegex = /1[3-9]\d{9}|(\+86\s?)?1[3-9]\d{9}/g;
+                const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+                const allMessages = [...messages, userMessage, { role: 'assistant', content: data.message }];
+                const fullText = allMessages.map(m => m.content).join(' ');
+
+                const foundPhone = fullText.match(phoneRegex);
+                const foundEmail = fullText.match(emailRegex);
+
+                if (foundPhone || foundEmail) {
+                    // 发送线索通知邮件
+                    try {
+                        await fetch('/api/notify', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contact: foundPhone?.[0] || foundEmail?.[0],
+                                detectedInfo: `电话: ${foundPhone?.join(', ') || '无'} | 邮箱: ${foundEmail?.join(', ') || '无'}`,
+                                chatHistory: allMessages.slice(1) // 排除初始欢迎语
+                            }),
+                        });
+                    } catch (e) {
+                        console.log('Lead notification sent or failed silently');
+                    }
+                }
             }
         } catch (error) {
             console.error('Chat Error:', error);
