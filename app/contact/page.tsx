@@ -17,15 +17,10 @@ export default function ContactPage() {
                             <h3 className="flex items-center gap-3 text-lg font-bold uppercase tracking-widest mb-4">
                                 <Mail className="text-[#E67E22]" /> Sales & Inquiries
                             </h3>
-                            <p className="text-[#BDC3C7] text-xl font-light">hello@easefetch.com</p>
+                            <p className="text-[#BDC3C7] text-xl font-light">info@easefetch.com</p>
                         </div>
 
-                        <div>
-                            <h3 className="flex items-center gap-3 text-lg font-bold uppercase tracking-widest mb-4">
-                                <Phone className="text-[#E67E22]" /> Support Line
-                            </h3>
-                            <p className="text-[#BDC3C7] text-xl font-light">+86 755 1234 5678</p>
-                        </div>
+
 
                         <div>
                             <h3 className="flex items-center gap-3 text-lg font-bold uppercase tracking-widest mb-4">
@@ -33,8 +28,7 @@ export default function ContactPage() {
                             </h3>
                             <p className="text-[#BDC3C7] text-xl font-light leading-relaxed">
                                 EaseFetch Technology Park<br />
-                                Nanshan District, Shenzhen<br />
-                                China, 518000
+                                Hangzhou, China
                             </p>
                         </div>
                     </div>

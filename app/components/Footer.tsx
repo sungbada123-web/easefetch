@@ -45,8 +45,8 @@ export default function Footer() {
                     <div>
                         <h3 className="text-sm font-bold uppercase tracking-widest mb-8 text-[#E67E22]">Contact</h3>
                         <address className="not-italic text-[#BDC3C7] font-light space-y-4">
-                            <p>Global HQ<br />Shenzhen, China</p>
-                            <p>hello@easefetch.com<br />+86 755 1234 5678</p>
+                            <p>Global HQ<br />Hangzhou, China</p>
+                            <p>info@easefetch.com</p>
                         </address>
                     </div>
                 </div>
