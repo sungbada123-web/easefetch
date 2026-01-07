@@ -38,18 +38,10 @@ declare global {
 export default function LanguageSwitcher() {
     const [isOpen, setIsOpen] = useState(false);
     const [currentLang, setCurrentLang] = useState('en');
-    const [isLoaded, setIsLoaded] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // 加载 Google Translate 脚本
-        const addScript = () => {
-            const script = document.createElement('script');
-            script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-            script.async = true;
-            document.body.appendChild(script);
-        };
-
+        // 1. 设置 Google Translate 初始化函数
         window.googleTranslateElementInit = () => {
             if (window.google?.translate?.TranslateElement) {
                 new window.google.translate.TranslateElement(
@@ -61,14 +53,32 @@ export default function LanguageSwitcher() {
                     },
                     'google_translate_element_hidden'
                 );
-
-                // 标记为已加载
-                setTimeout(() => setIsLoaded(true), 1000);
             }
+        };
+
+        // 2. 加载 Google Translate 脚本 (使用 translate.googleapis.com 提高稳定性)
+        const addScript = () => {
+            const script = document.createElement('script');
+            script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+            script.async = true;
+            document.body.appendChild(script);
         };
 
         if (!document.querySelector('script[src*="translate.google.com"]')) {
             addScript();
+        }
+
+        // 从 Cookie 中恢复当前语言状态
+        const getCookie = (name: string) => {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop()?.split(';').shift();
+        };
+
+        const googtrans = getCookie('googtrans');
+        if (googtrans) {
+            const lang = googtrans.split('/').pop();
+            if (lang) setCurrentLang(lang);
         }
 
         // 点击外部关闭下拉菜单
@@ -86,16 +96,25 @@ export default function LanguageSwitcher() {
         setCurrentLang(langCode);
         setIsOpen(false);
 
-        // 等待 Google Translate 加载完成
+        // 核心：设置 Google Translate 所需的 Cookie
+        // 格式通常为 /en/langCode
+        const cookieValue = `/en/${langCode}`;
+        document.cookie = `googtrans=${cookieValue}; path=/`;
+        document.cookie = `googtrans=${cookieValue}; domain=.easefetch.com; path=/`;
+
+        // 触发翻译
         const attemptTranslate = (attempts = 0) => {
             const selectElement = document.querySelector('.goog-te-combo') as HTMLSelectElement;
-
             if (selectElement) {
                 selectElement.value = langCode;
+                // 模拟原生事件以静默触发翻译
                 selectElement.dispatchEvent(new Event('change', { bubbles: true }));
-            } else if (attempts < 20) {
-                // 如果还没加载完，继续尝试
-                setTimeout(() => attemptTranslate(attempts + 1), 200);
+            } else if (attempts < 15) {
+                setTimeout(() => attemptTranslate(attempts + 1), 300);
+            } else {
+                // 如果实在找不到 combo (可能被墙或加载极慢)，则刷新页面
+                // 此时因为我们设置了 Cookie，页面刷新后 Google Translate 会自动翻译
+                window.location.reload();
             }
         };
 
@@ -105,30 +124,30 @@ export default function LanguageSwitcher() {
     const currentLanguage = languages.find(l => l.code === currentLang) || languages[0];
 
     return (
-        <div className="relative" ref={dropdownRef}>
-            {/* 隐藏的 Google Translate 元素 */}
-            <div id="google_translate_element_hidden" className="hidden" />
+        <div className="relative notranslate" ref={dropdownRef}>
+            {/* 隐藏的 Google Translate 原生 UI 容器 */}
+            <div id="google_translate_element_hidden" className="hidden" aria-hidden="true" />
 
             {/* 自定义语言切换按钮 */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors"
-                title={`Current: ${currentLanguage.name}`}
+                aria-label="Select Language"
             >
                 <Globe size={18} className="text-slate-600" />
-                <span className="text-sm font-medium text-slate-600">{currentLanguage.flag}</span>
+                <span className="text-sm font-semibold text-slate-600">{currentLanguage.flag}</span>
             </button>
 
             {/* 语言下拉菜单 */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        className="absolute right-0 top-full mt-2 w-64 bg-white border border-slate-200 rounded-lg shadow-xl overflow-hidden z-50"
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        className="absolute right-0 top-full mt-2 w-64 bg-white border border-slate-200 rounded-xl shadow-2xl overflow-hidden z-[100]"
                     >
-                        <div className="max-h-96 overflow-y-auto">
+                        <div className="max-h-96 overflow-y-auto py-1">
                             {languages.map((lang) => (
                                 <button
                                     key={lang.code}
@@ -141,7 +160,7 @@ export default function LanguageSwitcher() {
                                         <span className="text-sm font-medium text-slate-700">{lang.name}</span>
                                     </div>
                                     {currentLang === lang.code && (
-                                        <Check size={16} className="text-[#E67E22]" />
+                                        <Check size={16} className="text-[#E67E22] stroke-[3]" />
                                     )}
                                 </button>
                             ))}
@@ -150,13 +169,38 @@ export default function LanguageSwitcher() {
                 )}
             </AnimatePresence>
 
-            {/* 隐藏 Google Translate 默认 UI */}
+            {/* 注入全局样式以彻底隐藏 Google Translate 原生界面 */}
             <style jsx global>{`
-                .goog-te-banner-frame { display: none !important; }
-                body { top: 0 !important; }
-                .skiptranslate { display: none !important; }
-                #google_translate_element_hidden { display: none !important; }
-                .goog-te-spinner-pos { display: none !important; }
+                /* 隐藏顶部翻译条 */
+                .goog-te-banner-frame, 
+                .goog-te-banner,
+                .goog-te-menu-value span:nth-child(2),
+                .goog-te-menu-value img,
+                .goog-te-gadget-icon,
+                .skiptranslate {
+                    display: none !important;
+                }
+                
+                /* 修复页面偏移 */
+                body {
+                    top: 0 !important;
+                    position: static !important;
+                }
+                
+                /* 隐藏 Google Spinner */
+                .goog-te-spinner-pos {
+                    display: none !important;
+                }
+
+                /* 隐藏悬停动词提示 */
+                goog-te-balloon-frame {
+                    display: none !important;
+                }
+
+                /* 隐藏原本的翻译小部件 */
+                #google_translate_element_hidden {
+                    display: none !important;
+                }
             `}</style>
         </div>
     );
