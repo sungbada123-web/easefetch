@@ -20,27 +20,46 @@ export default function FloatingContact() {
         }
     }, [messages, isTyping]);
 
-    const handleSendMessage = (e: React.FormEvent) => {
+    const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!inputValue.trim()) return;
 
         const userMessage = { role: 'user', content: inputValue };
         setMessages(prev => [...prev, userMessage]);
+        const currentInput = inputValue;
         setInputValue('');
         setIsTyping(true);
 
-        // Simulated AI Response
-        setTimeout(() => {
-            let aiContent = "I'd be happy to help. Are you interested in our Urban Logistics series or Cold Chain solutions?";
-            if (inputValue.toLowerCase().includes('price') || inputValue.toLowerCase().includes('cost')) {
-                aiContent = "For pricing details, I can connect you with our sales team. Would you like to leave your contact info or call us directly?";
-            } else if (inputValue.toLowerCase().includes('where') || inputValue.toLowerCase().includes('location')) {
-                aiContent = "EaseFetch systems are deployed globally. We have major hubs in Singapore, London, and New York.";
-            }
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: currentInput,
+                    history: messages.slice(1) // 排除初始欢迎语
+                }),
+            });
 
-            setMessages(prev => [...prev, { role: 'assistant', content: aiContent }]);
+            const data = await response.json();
+
+            if (data.error) {
+                // 如果是 API Key 没配置，给用户一个友好的提示（开发者模式下）
+                setMessages(prev => [...prev, {
+                    role: 'assistant',
+                    content: '抱歉，系统检测到 AI 密钥尚未配置。请联系管理员在环境变量中设置 NEXT_PUBLIC_GEMINI_API_KEY。'
+                }]);
+            } else {
+                setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
+            }
+        } catch (error) {
+            console.error('Chat Error:', error);
+            setMessages(prev => [...prev, {
+                role: 'assistant',
+                content: '连线 AI 失败，请检查您的网络连接或稍后再试。'
+            }]);
+        } finally {
             setIsTyping(false);
-        }, 1500);
+        }
     };
 
     return (
@@ -76,8 +95,8 @@ export default function FloatingContact() {
                             {messages.map((msg, i) => (
                                 <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                     <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${msg.role === 'user'
-                                            ? 'bg-[#E67E22] text-white rounded-tr-none'
-                                            : 'bg-white text-slate-700 shadow-sm border border-slate-100 rounded-tl-none'
+                                        ? 'bg-[#E67E22] text-white rounded-tr-none'
+                                        : 'bg-white text-slate-700 shadow-sm border border-slate-100 rounded-tl-none'
                                         }`}>
                                         {msg.content}
                                     </div>
