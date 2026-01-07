@@ -157,7 +157,7 @@ export default function FloatingContact() {
             <div className="flex flex-col gap-3">
                 {/* WhatsApp Button */}
                 <motion.a
-                    href="https://wa.me/8613920427688"
+                    href="https://api.whatsapp.com/send?phone=8613920427688&text=您好，我想咨询智能柜产品"
                     target="_blank"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
