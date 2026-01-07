@@ -38,6 +38,7 @@ declare global {
 export default function LanguageSwitcher() {
     const [isOpen, setIsOpen] = useState(false);
     const [currentLang, setCurrentLang] = useState('en');
+    const [isLoaded, setIsLoaded] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -60,6 +61,9 @@ export default function LanguageSwitcher() {
                     },
                     'google_translate_element_hidden'
                 );
+
+                // 标记为已加载
+                setTimeout(() => setIsLoaded(true), 1000);
             }
         };
 
@@ -82,12 +86,20 @@ export default function LanguageSwitcher() {
         setCurrentLang(langCode);
         setIsOpen(false);
 
-        // 触发 Google Translate 切换
-        const selectElement = document.querySelector('.goog-te-combo') as HTMLSelectElement;
-        if (selectElement) {
-            selectElement.value = langCode;
-            selectElement.dispatchEvent(new Event('change'));
-        }
+        // 等待 Google Translate 加载完成
+        const attemptTranslate = (attempts = 0) => {
+            const selectElement = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+
+            if (selectElement) {
+                selectElement.value = langCode;
+                selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+            } else if (attempts < 20) {
+                // 如果还没加载完，继续尝试
+                setTimeout(() => attemptTranslate(attempts + 1), 200);
+            }
+        };
+
+        attemptTranslate();
     };
 
     const currentLanguage = languages.find(l => l.code === currentLang) || languages[0];
@@ -101,6 +113,7 @@ export default function LanguageSwitcher() {
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors"
+                title={`Current: ${currentLanguage.name}`}
             >
                 <Globe size={18} className="text-slate-600" />
                 <span className="text-sm font-medium text-slate-600">{currentLanguage.flag}</span>
@@ -143,6 +156,7 @@ export default function LanguageSwitcher() {
                 body { top: 0 !important; }
                 .skiptranslate { display: none !important; }
                 #google_translate_element_hidden { display: none !important; }
+                .goog-te-spinner-pos { display: none !important; }
             `}</style>
         </div>
     );
