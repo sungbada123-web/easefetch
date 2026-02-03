@@ -187,6 +187,25 @@ export const products: Product[] = [
         href: '/products/doc-exchange'
     },
     {
+        id: 'device-lending',
+        name: 'Device Lending Locker',
+        series: 'enterprise',
+        seriesName: 'Enterprise Series',
+        tagline: 'Self-Service IT Asset Lending',
+        description: 'Smart locker system for borrowing laptops, tablets, and peripherals with automated inventory sync. Designed for enterprise helpdesks, training centers, and shared workspaces.',
+        features: ['Badge or QR authentication', 'Asset tag scanning', 'Auto return reminders', 'Charging-ready compartments'],
+        specs: [
+            { label: 'Auth', value: 'NFC / QR / SSO' },
+            { label: 'Charging', value: 'USB-C + AC' },
+            { label: 'Audit', value: 'Real-time checkout logs' },
+            { label: 'Slots', value: '8-48 configurable' }
+        ],
+        image: '/images/product-device-lending.png',
+        color: '#1F618D',
+        badge: 'New',
+        href: '/products/device-lending'
+    },
+    {
         id: 'smart-tool-crib',
         name: 'Smart Tool Crib',
         series: 'enterprise',
@@ -203,6 +222,24 @@ export const products: Product[] = [
         image: '/images/product-smart-tool-crib.png',
         color: '#F1C40F',
         href: '/products/smart-tool-crib'
+    },
+    {
+        id: 'power-share',
+        name: 'Power Bank Share Locker',
+        series: 'enterprise',
+        seriesName: 'Enterprise Series',
+        tagline: 'Always-On Device Power Access',
+        description: 'Shared power bank locker for offices, campuses, and industrial parks. Tracks lending, charging status, and usage trends for fleet management.',
+        features: ['Hot-swap power bank bays', 'Fleet health dashboard', 'Usage analytics', 'Multi-tenant billing'],
+        specs: [
+            { label: 'Capacity', value: '24-96 power banks' },
+            { label: 'Charge', value: 'Smart trickle mode' },
+            { label: 'Network', value: 'LAN / 4G / WiFi' },
+            { label: 'Access', value: 'QR / Badge / App' }
+        ],
+        image: '/images/product-power-share.png',
+        color: '#27AE60',
+        href: '/products/power-share'
     },
 
     // --- SERIES 5: SPECIALTY ---
@@ -225,6 +262,25 @@ export const products: Product[] = [
         href: '/products/pharmacy-pickup'
     },
     {
+        id: 'phone-shielding',
+        name: 'Phone Shielding Locker',
+        series: 'specialty',
+        seriesName: 'Specialty Series',
+        tagline: 'Secure, Silent Meeting Rooms',
+        description: 'Electromagnetic shielding locker designed for confidential meetings and exam settings. Prevents signal leakage while providing auditable, controlled storage.',
+        features: ['60-90dB shielding range', 'Batch unlock for sessions', 'Tamper alerts', 'Offline audit mode'],
+        specs: [
+            { label: 'Shielding', value: '60-90dB (customizable)' },
+            { label: 'Slots', value: '10-60 compartments' },
+            { label: 'Auth', value: 'QR / Badge / PIN' },
+            { label: 'Power', value: '110-240V AC' }
+        ],
+        image: '/images/product-phone-shielding.png',
+        color: '#2C3E50',
+        badge: 'V2',
+        href: '/products/phone-shielding'
+    },
+    {
         id: 'evidence-custody',
         name: 'Evidence Custody Locker',
         series: 'specialty',
@@ -241,6 +297,60 @@ export const products: Product[] = [
         image: '/images/product-evidence.png',
         color: '#7F8C8D',
         href: '/products/evidence-custody'
+    },
+    {
+        id: 'secure-records',
+        name: 'Secure Records Vault',
+        series: 'specialty',
+        seriesName: 'Specialty Series',
+        tagline: 'Compliant Storage for Sensitive Files',
+        description: 'High-security vault for confidential documents and evidence materials. Supports dual authorization and immutable access logs for regulated environments.',
+        features: ['Dual-person authorization', 'Fail-safe locking', 'Compliance-ready audit trail', 'Environmental monitoring'],
+        specs: [
+            { label: 'Security', value: 'Grade 4 Lock' },
+            { label: 'Access', value: 'Dual auth + biometric' },
+            { label: 'Monitoring', value: 'Temp / humidity sensors' },
+            { label: 'Cabinet', value: 'Reinforced steel' }
+        ],
+        image: '/images/product-secure-records.png',
+        color: '#5D6D7E',
+        href: '/products/secure-records'
+    },
+    {
+        id: 'exam-storage',
+        name: 'Exam Storage Locker',
+        series: 'specialty',
+        seriesName: 'Specialty Series',
+        tagline: 'Secure Testing & Training Controls',
+        description: 'Purpose-built storage for exam devices and prohibited items. Enables scheduled batch unlock, attendance logs, and room-based access control.',
+        features: ['Scheduled unlock windows', 'Class roster import', 'Auto-close timers', 'Quiet open mode'],
+        specs: [
+            { label: 'Slots', value: '20-80 compartments' },
+            { label: 'Control', value: 'Room-based policies' },
+            { label: 'Auth', value: 'ID / QR / PIN' },
+            { label: 'Compliance', value: 'Education-ready' }
+        ],
+        image: '/images/product-exam-storage.png',
+        color: '#8E44AD',
+        href: '/products/exam-storage'
+    },
+    {
+        id: 'medical-controlled',
+        name: 'Controlled Med Locker',
+        series: 'specialty',
+        seriesName: 'Specialty Series',
+        tagline: 'Dual-Control Medication Compliance',
+        description: 'Specialized locker for controlled substances with access segmentation, temperature tracking, and mandatory witness logging.',
+        features: ['Two-person access', 'Temperature alerts', 'Dose-level audit trail', 'On-device compliance prompts'],
+        specs: [
+            { label: 'Temp', value: '2-25°C monitoring' },
+            { label: 'Access', value: 'Dual auth + badge' },
+            { label: 'Audit', value: 'Immutable ledger' },
+            { label: 'Alerts', value: 'SMS / Email / Web' }
+        ],
+        image: '/images/product-medical-controlled.png',
+        color: '#B03A2E',
+        href: '/products/medical-controlled'
     },
 
     // --- SERIES 6: RETAIL ---
