@@ -15,6 +15,15 @@ A Next.js industrial-grade website for EaseFetch, a full-stack smart locker solu
    ```
    Open [http://localhost:3000](http://localhost:3000)
 
+## ▲ Vercel Deployment
+
+1. Push the repository to GitHub/GitLab.
+2. Import the project in Vercel.
+3. Use the default Next.js build settings:
+   - Build Command: `npm run build`
+   - Output: `.next`
+4. Deploy to production and verify on your Vercel domain.
+
 ## 🏗️ Project Structure
 
 - `app/data/products.ts`: **Single Source of Truth** for all 18+ products.
